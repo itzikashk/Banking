@@ -371,17 +371,121 @@ mark{background:var(--mint);color:var(--ink);padding:0 2px;border-radius:2px}
 }
 .findlink:hover{background:var(--beige);border-color:var(--beige);color:var(--beige-ink)}
 .findlink::after{content:"\2197";margin-left:.25em}
+
+/* ================= MOBILE ================= */
+
+/* contents button — only exists below the sidebar breakpoint */
+.navbtn{
+  display:none;align-items:center;gap:7px;border:1px solid var(--rule);background:#fff;
+  color:var(--ink);font-family:var(--display);font-size:12.5px;font-weight:600;
+  padding:7px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;
+}
+.navbtn:hover{background:var(--rule-soft)}
+.navbtn svg{display:block}
+.navbtn .bar{display:block;width:14px;height:1.8px;background:currentColor;border-radius:2px;transition:transform .2s,opacity .2s}
+.navbtn .bars{display:grid;gap:3.2px}
+.navbtn[aria-expanded="true"] .bar:nth-child(1){transform:translateY(5px) rotate(45deg)}
+.navbtn[aria-expanded="true"] .bar:nth-child(2){opacity:0}
+.navbtn[aria-expanded="true"] .bar:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+#drawer-search{margin-bottom:16px}
+#drawer-search .searchwrap input{width:100%}
+
+@media (max-width:1080px){
+  .navbtn{display:flex}
+  /* the sidebar becomes a slide-in drawer instead of disappearing */
+  .sidebar{
+    display:block;position:fixed;left:0;right:0;top:var(--topbar);bottom:0;
+    height:auto;z-index:55;background:#fff;border-right:0;padding:18px 20px 70px;
+    transform:translateX(-100%);visibility:hidden;
+    transition:transform .22s ease,visibility .22s;
+  }
+  .sidebar.open{transform:none;visibility:visible;box-shadow:0 8px 40px rgba(20,20,23,.16)}
+  body.locked{overflow:hidden}
+  .toc a{padding:10px 10px 10px 13px}      /* bigger tap targets */
+  .chev{width:38px;flex-basis:38px}
+  .toc a.lvl2{padding-left:24px}
+}
+
+/* ---- presentation reflows instead of shrinking ---- */
+@media (max-width:900px){
+  .stagewrap{display:block;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff}
+  .stage{width:100%;height:auto;transform:none!important;box-shadow:none}
+  .slide{
+    position:relative;inset:auto;padding:22px 16px 72px;
+    min-height:calc(100vh - 52px);min-height:calc(100dvh - 52px);
+  }
+  .slide .k{font-size:10.5px;margin-bottom:9px}
+  .slide h2{font-size:26px;line-height:1.1;margin-bottom:18px}
+  .slide .body{font-size:15.5px;line-height:1.42}
+  .slide .src{font-size:9.5px;margin-top:14px}
+  .s-cols,.s-cols3,.s-cols4,.s-num{grid-template-columns:1fr!important}
+  .s-cols,.s-cols3,.s-cols4{gap:11px;height:auto}
+  .s-flow{grid-template-columns:repeat(2,1fr);gap:8px}
+  .s-lead{font-size:18.5px;max-width:none}
+  .s-quote{font-size:20px;max-width:none;line-height:1.3}
+  .s-note{font-size:14.5px;padding:12px 14px}
+  .card{padding:13px 14px}
+  .card b{font-size:15.5px}
+  .card span{font-size:14px}
+  .stat b{font-size:36px}
+  .s-num i{width:26px;height:26px;font-size:12px}
+  .s-num{gap:10px 12px}
+  .s-list li{margin-bottom:8px}
+  /* tables get their own swipe area rather than crushing */
+  .sscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -2px}
+  .sscroll .stable{min-width:540px;font-size:13px}
+  .stable th,.stable td{padding:7px 9px}
+  /* prev / next as a fixed bar so they are always reachable */
+  .mobnav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;height:56px;z-index:4;
+    background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--rule);
+    align-items:center;justify-content:space-between;padding:0 14px;gap:10px;
+  }
+  .mobnav button{
+    flex:1;height:38px;border:1px solid var(--rule);background:#fff;border-radius:999px;
+    font-family:var(--display);font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;
+  }
+  .mobnav .counter{flex:0 0 auto;min-width:52px}
+  .deckbar .t{display:none}
+  #full{display:none}
+  .deckbar{gap:8px;padding:0 12px}
+  .deckbtn{padding:7px 11px;font-size:12px}
+  .deckbar .counter{display:none}
+  .overview{inset:52px 0 56px}
+  .ovgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px}
+}
+.mobnav{display:none}
+
+@media (max-width:680px){
+  .searchwrap{display:block}          /* it lives in the drawer now */
+  .hero h1{font-size:clamp(31px,8.6vw,44px)}
+  .thesis{padding:19px 20px}
+  .thesis p{font-size:18px}
+  .hero-meta{gap:18px 26px}
+  .hero-meta b{font-size:21px}
+  .prose h1{font-size:26px}
+  .prose h2{font-size:20px}
+  .prose table{font-size:12.5px}
+  .prose thead th{padding:9px 10px}
+  .prose tbody td{padding:9px 10px}
+  .topbar{gap:10px;padding:0 12px}
+  .modes button{padding:7px 12px;font-size:12px}
+}
 </style>
 </head>
 <body>
 
 <header class="topbar">
+  <button class="navbtn" id="navbtn" aria-expanded="false" aria-controls="sidebar">
+    <span class="bars" aria-hidden="true"><span class="bar"></span><span class="bar"></span><span class="bar"></span></span>
+    Contents
+  </button>
   <div class="brand">After Go-Live <span>· Banking production research</span></div>
   <div class="topbar-spacer"></div>
-  <div class="searchwrap">
+  <span id="search-slot"><div class="searchwrap">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
     <input id="q" type="search" placeholder="Search the report" aria-label="Search the report">
-  </div>
+  </div></span>
   <div class="modes" role="tablist" aria-label="View">
     <button id="m-report" role="tab" aria-selected="true">Report</button>
     <button id="m-deck" role="tab" aria-selected="false">Presentation</button>
@@ -390,7 +494,8 @@ mark{background:var(--mint);color:var(--ink);padding:0 2px;border-radius:2px}
 <div class="progress" id="prog"></div>
 
 <div class="shell" id="report">
-  <nav class="sidebar" aria-label="Contents">
+  <nav class="sidebar" id="sidebar" aria-label="Contents">
+    <div id="drawer-search"></div>
     <p class="toc-label">Contents</p>
     <div class="toc" id="toc"><div class="toc-actions"><button id="toggle-all" aria-expanded="false">Expand all</button></div><div class="grp"><div class="grp-head"><a class="lvl1 c1" href="#operational-pain-in-banking-production-sre-and-post-production-support" data-grp="0">Operational
 Pain in Banking Production, SRE and Post-Production Support</a><button class="chev" aria-expanded="false" aria-controls="g0" aria-label="Show sections in Operational
@@ -3311,6 +3416,11 @@ Items 10 to 20 are better positioned as features of these than as products.</div
 <div class="card" style="margin-top:16px"><b>Who to ask</b><span>CIO or COO at a tier-one European bank · Head of Production at a payments firm ·
 Operational risk lead subject to DORA · Head of Post-trade Operations at a custodian · A US regional bank CIO on an outsourced core.</span></div></div></section></div></div>
   <div class="overview" id="overview"><div class="ovgrid"><button class="ovcard" data-go="0"><i>01 · Research brief · July 2026</i><b>After Go-Live: Where Banking Actually Bleeds</b></button><button class="ovcard" data-go="1"><i>02 · Method</i><b>How to read this research</b></button><button class="ovcard" data-go="2"><i>03 · Executive summary</i><b>Six findings</b></button><button class="ovcard" data-go="3"><i>04 · The anatomy</i><b>Seven steps after go-live — three of them hurt</b></button><button class="ovcard" data-go="4"><i>05 · Finding 1</i><b>It is not the hackers. It is the change.</b></button><button class="ovcard" data-go="5"><i>06 · Finding 2</i><b>The costly gap is not the fix — it is the not knowing</b></button><button class="ovcard" data-go="6"><i>07 · Finding 3</i><b>Alerting fails in both directions</b></button><button class="ovcard" data-go="7"><i>08 · Finding 4</i><b>The clock is no longer yours to set</b></button><button class="ovcard" data-go="8"><i>09 · Finding 5</i><b>The maintenance window is disappearing</b></button><button class="ovcard" data-go="9"><i>10 · Part 5</i><b>Incidents originate deep and surface shallow</b></button><button class="ovcard" data-go="10"><i>11 · Split 1</i><b>Europe vs United States — same failure, different bill</b></button><button class="ovcard" data-go="11"><i>12 · Split 2</i><b>Seven regions — where pain, budget and deadline meet</b></button><button class="ovcard" data-go="12"><i>13 · Regional evidence</i><b>Three markets prove the thesis in public</b></button><button class="ovcard" data-go="13"><i>14 · Split 3</i><b>Consumer vs business — different pain, different buyer</b></button><button class="ovcard" data-go="14"><i>15 · The money</i><b>What post-production failure costs today</b></button><button class="ovcard" data-go="15"><i>16 · Part 8</i><b>The vendor landscape serves the stack, not the question</b></button><button class="ovcard" data-go="16"><i>17 · Check before publishing</i><b>Four vendor entries are out of date</b></button><button class="ovcard" data-go="17"><i>18 · Part 9</i><b>What nobody has solved</b></button><button class="ovcard" data-go="18"><i>19 · Part 10</i><b>Willingness to pay needs three things at once</b></button><button class="ovcard" data-go="19"><i>20 · Top 20, abridged</i><b>The nine opportunities worth funding</b></button><button class="ovcard" data-go="20"><i>21 · Counter-case</i><b>What would kill this thesis</b></button><button class="ovcard" data-go="21"><i>22 · Next step</i><b>Ten questions to put to CIOs and heads of production</b></button></div></div>
+  <div class="mobnav">
+    <button id="m-prev" aria-label="Previous slide">&larr; Back</button>
+    <div class="counter"><span id="cur2">1</span> / 22</div>
+    <button id="m-next" aria-label="Next slide">Next &rarr;</button>
+  </div>
 </div>
 
 <script>
@@ -3323,20 +3433,30 @@ Operational risk lead subject to DORA · Head of Post-trade Operations at a cust
   var slides=[].slice.call(stage.querySelectorAll('.slide'));
   var ovcards=[].slice.call(ov.querySelectorAll('.ovcard'));
 
+  var cur2=document.getElementById('cur2');
+  var narrow=window.matchMedia('(max-width:900px)');
   function show(n){
     i=Math.max(0,Math.min(N-1,n));
     slides.forEach(function(s,k){ s.classList.toggle('on',k===i); });
     ovcards.forEach(function(c,k){ c.classList.toggle('cur',k===i); });
-    cur.textContent=i+1;
+    cur.textContent=i+1; if(cur2) cur2.textContent=i+1;
+    if(narrow.matches) wrap.scrollTop=0;
   }
   function fit(){
+    if(narrow.matches){ stage.style.transform='none'; return; }
     var r=wrap.getBoundingClientRect();
     var k=Math.min((r.width-48)/1280,(r.height-48)/720);
     stage.style.transform='scale('+Math.max(k,0.2)+')';
   }
+  /* wide slide tables get their own swipe area on small screens */
+  [].slice.call(stage.querySelectorAll('table.stable')).forEach(function(t){
+    var w=document.createElement('div'); w.className='sscroll';
+    t.parentNode.insertBefore(w,t); w.appendChild(t);
+  });
   function openDeck(){
     deck.classList.add('on'); deck.setAttribute('aria-hidden','false');
     report.style.display='none';
+    if(side.classList.contains('open')) setDrawer(false);
     mD.setAttribute('aria-selected','true'); mR.setAttribute('aria-selected','false');
     fit(); show(i); stage.focus();
   }
@@ -3344,6 +3464,7 @@ Operational risk lead subject to DORA · Head of Post-trade Operations at a cust
     deck.classList.remove('on'); deck.setAttribute('aria-hidden','true');
     ov.classList.remove('on');
     report.style.display='';
+    document.body.classList.remove('locked');
     mD.setAttribute('aria-selected','false'); mR.setAttribute('aria-selected','true');
   }
   mD.onclick=openDeck; mR.onclick=closeDeck;
@@ -3356,10 +3477,52 @@ Operational risk lead subject to DORA · Head of Post-trade Operations at a cust
     else { document.exitFullscreen(); }
   };
   ovcards.forEach(function(c){ c.onclick=function(){ show(+c.dataset.go); ov.classList.remove('on'); }; });
+  var mp=document.getElementById('m-prev'), mn=document.getElementById('m-next');
+  if(mp) mp.onclick=function(){show(i-1);};
+  if(mn) mn.onclick=function(){show(i+1);};
   window.addEventListener('resize',fit);
+  window.addEventListener('orientationchange',function(){setTimeout(fit,180);});
+
+  /* swipe between slides */
+  var tx=0,ty=0,tracking=false;
+  wrap.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1) return;
+    tx=e.touches[0].clientX; ty=e.touches[0].clientY; tracking=true;
+  },{passive:true});
+  wrap.addEventListener('touchend',function(e){
+    if(!tracking) return; tracking=false;
+    var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.8) show(dx<0 ? i+1 : i-1);
+  },{passive:true});
+
+  /* ---- contents drawer ---- */
+  var nav=document.getElementById('navbtn'), side=document.getElementById('sidebar'),
+      slot=document.getElementById('search-slot'), dsearch=document.getElementById('drawer-search');
+  function isMobile(){ return window.matchMedia('(max-width:1080px)').matches; }
+  function placeSearch(){
+    var sw=document.querySelector('.searchwrap'); if(!sw) return;
+    var host=isMobile()?dsearch:slot;
+    if(sw.parentNode!==host) host.appendChild(sw);
+  }
+  function setDrawer(open){
+    side.classList.toggle('open',open);
+    nav.setAttribute('aria-expanded',open?'true':'false');
+    document.body.classList.toggle('locked',open);
+  }
+  nav.addEventListener('click',function(){ setDrawer(!side.classList.contains('open')); });
+  side.addEventListener('click',function(e){
+    if(e.target.tagName==='A' && isMobile()) setDrawer(false);
+  });
+  window.addEventListener('resize',function(){
+    placeSearch(); if(!isMobile()) setDrawer(false);
+  });
+  placeSearch();
 
   document.addEventListener('keydown',function(e){
-    if(!deck.classList.contains('on')) return;
+    if(!deck.classList.contains('on')){
+      if(e.key==='Escape' && side.classList.contains('open')) setDrawer(false);
+      return;
+    }
     if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(i+1);}
     else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1);}
     else if(e.key==='Home'){show(0);} else if(e.key==='End'){show(N-1);}
