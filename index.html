@@ -299,6 +299,8 @@ section{padding:52px 0}
 .acc-body{padding:0 18px 18px}
 .acc-body p{margin:0 0 10px;font-size:.87rem;color:var(--ink-2);line-height:1.6}
 .acc-body ul{margin:0 0 8px;padding-inline-start:20px;font-size:.87rem;color:var(--ink-2);line-height:1.75}
+.acc-body ul li a{color:var(--accent-ink);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(143,33,56,.35)}
+.acc-body ul li b{color:var(--ink)}
 
 .check-list{display:flex;flex-direction:column;gap:2px}
 .check-item{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line-soft);cursor:pointer}
@@ -368,6 +370,7 @@ footer b{color:var(--on-navy)}
     <nav class="primary">
       <a href="#top">ראשי</a>
       <a href="#itinerary">תוכנית יומית</a>
+      <a href="#food">אוכל</a>
       <a href="#currency">כסף</a>
       <a href="#packing">ציוד</a>
       <a href="#tips">טיפים</a>
@@ -384,6 +387,7 @@ footer b{color:var(--on-navy)}
     <a href="#top">ראשי <span class="ico">🎌</span></a>
     <a href="#route">מסלול</a>
     <a href="#itinerary">תוכנית יומית <span class="ico">📅</span></a>
+    <a href="#food">אוכל, שתייה וקינוחים <span class="ico">🍜</span></a>
     <a href="#currency">כסף והמרת מטבע <span class="ico">💴</span></a>
     <a href="#packing">רשימות ציוד <span class="ico">🎒</span></a>
     <a href="#tips">טיפים חשובים <span class="ico">💡</span></a>
@@ -444,6 +448,17 @@ footer b{color:var(--on-navy)}
         <span class="badge weather">☀ <b>תלוי במזג האוויר</b></span>
       </div>
       <div id="daysContainer"></div>
+    </div>
+  </section>
+
+  <section id="food">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">אוכל, שתייה וקינוחים</div>
+        <h2>מה כדאי לחפש בדרך</h2>
+        <p>רעיונות לרשתות, משקאות וקינוחים ליד המסלול הקיים — לא הזמנות ולא תוספת קבועה ליום, רק דברים ששווה לחפש. תמיד לבדוק את הרכיבים בפועל בסניף.</p>
+      </div>
+      <div id="foodContainer"></div>
     </div>
   </section>
 
@@ -669,9 +684,11 @@ var DAYS = [
    ]},
   {day:9, dateISO:"2026-10-22", weekday:"חמישי", dateHe:"22 באוקטובר", city:"Kyoto",
    title:"טירת נִיג׳וֹ · שביל הפילוסופים", subtitle:"Nijo Castle · Philosopher's Path",
+   note:"אופציה ליום הזה: לקצר חלק משביל הפילוסופים אחה״צ ולפנות זמן לעצירת קפה-חתולים.",
    items:[
      {time:"בוקר", badges:["must"], title:"Nijo Castle", desc:"קרוב יחסית למלון — התחלה יעילה ליום.", transport:"Karasuma Oike ← Nijojo-mae: קו Tozai"},
-     {time:"אחה״צ", badges:["must"], title:"Ginkaku-ji & שביל הפילוסופים", desc:"ה-Silver Pavilion והליכה בשביל הפילוסופים.", transport:"אזור Nijo ← מזרח קיוטו: מטרו/אוטובוס"}
+     {time:"אחה״צ", badges:["must"], title:"Ginkaku-ji & שביל הפילוסופים", desc:"ה-Silver Pavilion והליכה בשביל הפילוסופים.", transport:"אזור Nijo ← מזרח קיוטו: מטרו/אוטובוס"},
+     {time:"אחה״צ מאוחר", badges:["optional"], title:"Cat Café MOCHA Kyoto Kawaramachi", desc:"עצירה משפחתית נעימה עם חתולים — רק אם מקצרים חלק משביל הפילוסופים. מתנהגים לפי כללי בית הקפה ונותנים לחתולים להתקרב לפי בחירתם, בלי לרדוף או להעיר אותם.", transport:"מרכז קיוטו, Kawaramachi", official:"https://catmocha.jp/en/shoplist/"}
    ]},
   {day:10, dateISO:"2026-10-23", weekday:"שישי", dateHe:"23 באוקטובר", city:"Nara",
    title:"טיול יום לנארה", subtitle:"Day Trip to Nara",
@@ -724,13 +741,70 @@ var PACK_JAPAN = ["דרכונים","ביטוח נסיעות","אישורי טי�
 
 var TIPS = [
   {ico:"🚆", title:"תחבורה", body:["Google Maps שימושי מאוד לניווט בין תחנות ומסלולים.","אפליקציית Japan Travel by NAVITIME עוזרת בתכנון רכבות.","כרטיסי IC כמו Suica / PASMO / ICOCA שימושיים לתחבורה יומיומית.","כרטיס IC הוא לא אוטומטית כרטיס לשינקנסן — צריך כרטיס נפרד.","לא מפרסמים כאן מספרי רציף מדויקים מראש, כי הם עלולים להשתנות."]},
-  {ico:"🚃", title:"נסיעה ברכבות", body:["עומדים בתור באזורים המסומנים על הרציף.","נותנים לנוסעים לרדת קודם, לפני העלייה.","שומרים על שקט ומדברים בקול נמוך.","נמנעים משיחות טלפון בקרונות פרברים.","שומרים על התיקים קרוב אלינו ולא מפריעים למעבר."]},
+  {ico:"🚃", title:"נסיעה ברכבות", body:["עומדים בתור באזורים המסומנים על הרציף.","נותנים לנוסעים לרדת קודם, לפני העלייה.","שומרים על שקט ומדברים בקול נמוך.","נמנעים משיחות טלפון בקרונות פרברים.","שומרים על התיקים קרוב אלינו ולא מפריעים למעבר.","אכילה בדרך כלל מקובלת ברכבות בין-עירוניות כמו שינקנסן; ברכבות פרברים רגילות עדיף להימנע מארוחה."]},
   {ico:"🏪", title:"מינימרקטים", body:["שווה לחוות: 7-Eleven, FamilyMart, Lawson.","שימושי לארוחת בוקר, שתייה, חטיפים, אונigiri, קינוחים וציוד לשעת חירום."]},
   {ico:"🥤", title:"מכונות אוטומטיות", body:["חלק טבעי ומהנה מהיומיום ביפן — לא אטרקציה בפני עצמה, אלא חוויה קטנה שכדאי לאמץ תוך כדי הטיול."]},
   {ico:"♨️", title:"אונסן", body:["מתקלחים ומתרחצים היטב לפני הכניסה למים.","בלי בגד ים באמבטיות המסורתיות.","מגבות בדרך כלל לא נכנסות למים.","כדאי לבדוק מראש את מדיניות הקעקועים של המלון הספציפי.","שומרים על אווירה שקטה ורגועה."]},
   {ico:"⛩️", title:"מקדשים ומקדשי שינטו", body:["מתנהגים בכבוד — קול נמוך, ללא צעקות או ריצה.","לא מצלמים במקומות שמסומנים כאסורים לצילום.","שומרים על מרחק ושקט ליד אזורי תפילה."]},
   {ico:"💴", title:"טיפים", body:["טיפים לא מקובלים ביפן בדרך כלל — אין צורך להשאיר תשר."]},
-  {ico:"🗑️", title:"זבל", body:["פחי אשפה ציבוריים מוגבלים ביפן.","כדאי לשאת שקית זבל קטנה איתכם עד שמוצאים פח."]}
+  {ico:"🗑️", title:"זבל", body:["פחי אשפה ציבוריים מוגבלים ביפן.","כדאי לשאת שקית זבל קטנה איתכם עד שמוצאים פח."]},
+  {ico:"🌸", title:"בושם וניחוח", body:["במסעדות קטנות ובמרחבים משותפים עדיף בושם קליל או בלי בושם בכלל — מחווה של התחשבות, לא כלל מחייב."]},
+  {ico:"🪜", title:"מדרגות נעות", body:["עומדים בבטחה על המדרגות הנעות; אין צורך לאמץ הרגל מקומי מסוים של עמידה בצד אחד."]},
+  {ico:"👟", title:"נעליים ורצפת טאטמי", body:["חולצים נעליים כשמתבקש, ולא דורכים עם נעליים או נעלי בית על טאטמי.","נעלי בית לשירותים נשארות באזור השירותים בלבד."]},
+  {ico:"🥢", title:"מקלות אכילה", body:["לא נועצים מקלות בצורה אנכית באורז.","לא מעבירים אוכל ישירות ממקלות למקלות.","באזורי תשלום עם מגש — משאירים את הכסף על המגש ולא ביד."]},
+  {ico:"👘", title:"גיון, מאיקו וגייקו", body:["לא רודפים, נוגעים או חוסמים מאיקו/גייקו ברחוב.","מכבדים סמטאות ומבואות פרטיים ושלטי איסור צילום."]},
+  {ico:"📺", title:"טלוויזיה יפנית במלון", body:["דוראימון ופוקימון משודרים בערוצים שונים בין אזור טוקיו לאזור קנסאי — כדאי לבדוק את לוח הערוצים של המלון הספציפי.","אפליקציית NHK WORLD-JAPAN נותנת כיסוי חדשות ותוכן באנגלית כשקשה לעקוב מקומית.","מילים שימושיות בשלט: 番組表 = לוח שידורים, 字幕 = כתוביות (בדרך כלל ביפנית).","זמני שידור משתנים ולא מובטחים — זו אופציה נחמדה לערב רגוע במלון, לא סיבה למהר בחזרה."]}
+];
+
+var FOOD = [
+  {ico:"🍔", title:"רשתות מוכרות — בעיקר בשביל אלון", sub:"תמיד לבדוק את הרכיבים בסניף",
+   intro:"רשתות אוכל מהיר ומוכר שנוח למצוא כמעט בכל תחנה.",
+   body:[
+     {name:"MOS Burger", note:"המבורגרים בסגנון יפני — שווה לבדוק אפשרות טריאקי.", url:"https://www.mos.jp/inbound/en/"},
+     {name:"Sukiya / Yoshinoya / Matsuya", note:"קערות בקר-אורז (gyudon) מהירות. ל-Matsuya יש גם קארי ומנות בגריל."},
+     {name:"Marugame Seimen", note:"אודון מהיר, טמפורה ותוספות — לבדוק מרכיבי המרק והטמפורה.", url:"https://jp.marugame.com/en/menu/"},
+     {name:"Pepper Lunch", note:"בשר ואורז על פלטה חמה, מתבשל לפי ההוראות על הצלחת."},
+     {name:"CoCo Ichibanya", note:"קארי יפני להרכבה אישית — לבדוק רמת חריפות ורכיבים, לא להניח שהבסיס נטול בשר.", url:"https://www.ichibanya.co.jp/"},
+     {name:"Nakau", note:"oyakodon (עוף וביצה על אורז) יכול להתאים לאלון."},
+     {name:"Kura Sushi / Sushiro / Hama Sushi", note:"סושי מסוע — לבחור טונה, דג מבושל, ביצה או ירקות לפי הטעם."},
+     {name:"גיבוי מערבי מוכר", note:"McDonald's, KFC, Burger King, Subway ודומיהם — זמינים כמעט בכל מקום."}
+   ]},
+  {ico:"🐟", title:"אפשרויות שמתאימות גם להורים", sub:"דג, ירקות, ביצה וגבינה — בלי בשר ובלי פירות ים",
+   intro:"איזק ואנת אוכלים דגים, ירקות, ביצים וגבינה — בלי בשר ובלי פירות ים. מרק, רוטב או ציפוי של מנת דג/ירקות/נודלס עלולים להכיל משהו אחר — לא להניח שהשם לבדו קובע.",
+   body:[
+     {name:"Obon de Gohan (MARK IS Minatomirai)", note:"מנות סט עם אפשרויות דג ובשר בנפרד — שווה בדיקה.", url:"https://www.mec-markis.jp/mm/shop/detail/?act=7984"},
+     {name:"Yayoiken", note:"רשת מנות סט נוספת — לבדוק אפשרויות דג להורים ועוף/בקר לאלון.", url:"https://www.yayoiken.com/en/"},
+     {name:"פיצה", note:"שלושתם אוהבים פיצה — גיבוי נוח כשקשה למצוא משהו שמתאים לכולם."}
+   ]},
+  {ico:"🥤", title:"משקאות ומוקטיילים", sub:"בלי אלכוהול כברירת מחדל",
+   intro:"אלון נהנה ממשקאות מוגזים ופירותיים — אפרסק, מנגו, אננס וליצ׳י/לימונדה — וגם קפה קר, תה חלב, שוקו חם ומאצ׳ה מתוק.",
+   body:[
+     {name:"C.C. Lemon", note:"משקה לימון מתוק וקליל — יש גם גרסת מכונות אוטומטיות.", url:"https://www.suntory.co.jp/softdrink/cclemon/"},
+     {name:"Mitsuya Cider", note:"סודה יפנית מוגזת (השם ״סיידר״ לא אומר אלכוהול!) — כולל גרסאות פירות.", url:"https://www.asahiinryo.co.jp/products/mitsuya/"},
+     {name:"Calpis Soda", note:"משקה מתוק, חמצמץ וחלבי — יש גרסאות אפרסק ואננס.", url:"https://www.asahiinryo.co.jp/products/calpis/"},
+     {name:"מוקטייל פירות בבית קפה/בר במלון", note:"לבקש אפרסק, אננס, מנגו, ליצ׳י, לימון או יוזו עם סודה — ולציין במפורש בלי אלכוהול."},
+     {name:"מלון סודה / קרם סודה", note:"קינוח-משקה מתוק לשתף בבית קפה."}
+   ],
+   noteBelow:"אם בודקים משקה ארוז שנראה כמו מוקטייל — לבדוק את אחוז האלכוהול על התווית. רק סימון מפורש של 0.00% מבטיח נטול אלכוהול; ״Zero״ לבד יכול להתייחס רק לסוכר או לקלוריות."},
+  {ico:"🍡", title:"קינוחים ובתי קפה לעצירה", sub:"כולל דנגו ומוצ׳י — הטעם שאלון אהב",
+   body:[
+     {name:"פורין", note:"פודינג קרמל יפני קלאסי — קינוח קטן ונוח לעצירה."},
+     {name:"עוגת גבינה יפנית / בסקית", note:"גרסה תפוחה ורכה, או גרסה עשירה יותר."},
+     {name:"דנגו ומוצ׳י / דאיפוקו", note:"ממתקי אורז דביקים — אלון ציין שהוא אוהב את המרקם."},
+     {name:"טאיאקי", note:"עוגייה בצורת דג במילוי קרם/שוקולד/מאצ׳ה — לבדוק את המילוי בפועל, הצורה לא אומרת דג."},
+     {name:"סופט-קרים", note:"טעמים לשים לב אליהם: חלב הוקאידו, מאצ׳ה-וניל, הוג׳יצ׳ה, שומשום שחור, קינאקו."},
+     {name:"פרפה פירות / עוגת תות", note:"קינוח בית קפה משותף ונעים."},
+     {name:"Komeda Coffee — Shiro-Noir", note:"קרואסון חם בסגנון דני עם סופט-קרים, קינוח-הדגל של הרשת.", url:"https://www.komeda.co.jp/menu/detail.html?cat=1-3&item=10213"},
+     {name:"Mister Donut", note:"עצירת דונאט ומשקה פשוטה וזמינה.", url:"https://www.misterdonut.jp/m_menu/"},
+     {name:"nana's green tea", note:"משקאות וקינוחי מאצ׳ה.", url:"https://www.nanasgreentea.com/"},
+     {name:"Stumptown ב-Ace Hotel Kyoto", note:"כבר משולב בעצירת הקפה ב-20 באוקטובר.", url:"https://acehotel.com/kyoto/eat-drink/"}
+   ]},
+  {ico:"🛍️", title:"עוד רעיונות לשופינג ומשחקים", sub:"לדפדף בדרך — לא תוספות קבועות",
+   body:[
+     {name:"MARK IS Minatomirai", note:"קרוב למלון ביוקוהמה — CAPCOM STORE, גשאפון ופודקורט.", url:"https://www.mec-markis.jp/mm/floor/floor_4.html"},
+     {name:"Kyoto Takashimaya", note:"אוכל וקניות אם נמצאים בסביבה בקיוטו.", url:"https://www.takashimaya.co.jp/kyoto/departmentstore/"},
+     {name:"Namba Parks", note:"קרוב לבסיס באוסקה — חנויות, אוכל וגינות גג.", url:"https://nambaparks.com/"}
+   ]}
 ];
 
 var APPS = [
@@ -906,28 +980,41 @@ function buildChecklist(containerId, storageKey, items, progressId){
 buildChecklist("listHakone","jp2026_pack_hakone", PACK_HAKONE, "progHakone");
 buildChecklist("listJapan","jp2026_pack_japan", PACK_JAPAN, "progJapan");
 
-/* ===================== tips accordion ===================== */
-(function(){
-  var container = document.getElementById("tipsContainer");
-  TIPS.forEach(function(t){
+/* ===================== accordion list renderer (tips / food) ===================== */
+function renderAccordionList(containerId, data){
+  var container = document.getElementById(containerId);
+  data.forEach(function(t){
     var card = el("div","acc-card");
     var head = el("button","acc-head","");
     head.innerHTML =
       '<span class="ico">'+t.ico+'</span>'+
-      '<span class="ti">'+t.title+'</span>'+
+      '<span class="ti">'+t.title+(t.sub ? '<br><span class="sub">'+t.sub+'</span>' : '')+'</span>'+
       '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
     card.appendChild(head);
     var bodyOuter = el("div","acc-body-outer");
     var body = el("div","acc-body");
+    if(t.intro){ body.appendChild(el("p",null,t.intro)); }
     var ul = document.createElement("ul");
-    t.body.forEach(function(li){ var l=document.createElement("li"); l.textContent=li; ul.appendChild(l); });
+    t.body.forEach(function(li){
+      var l = document.createElement("li");
+      if(typeof li === "string"){
+        l.textContent = li;
+      } else {
+        var nameHtml = li.url ? '<a href="'+li.url+'" target="_blank" rel="noopener">'+li.name+'</a>' : '<b>'+li.name+'</b>';
+        l.innerHTML = nameHtml + (li.note ? " — "+li.note : "");
+      }
+      ul.appendChild(l);
+    });
     body.appendChild(ul);
+    if(t.noteBelow){ body.appendChild(el("p",null,t.noteBelow)); }
     bodyOuter.appendChild(body);
     card.appendChild(bodyOuter);
     container.appendChild(card);
     makeExpandable(card, head, bodyOuter, false);
   });
-})();
+}
+renderAccordionList("tipsContainer", TIPS);
+renderAccordionList("foodContainer", FOOD);
 
 /* ===================== apps + spontaneous ===================== */
 (function(){
