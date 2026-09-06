@@ -95,9 +95,9 @@ nav.primary{display:none}
   nav.primary a{padding:8px 12px;border-radius:99px;font-size:.86rem;font-weight:600;color:var(--ink-2);text-decoration:none;transition:.15s}
   nav.primary a:hover{background:var(--surface-2);color:var(--ink)}
 }
-.menu-btn{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
-@media (min-width:820px){.menu-btn{display:none}}
-.menu-btn svg{width:18px;height:18px}
+.icon-btn{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+@media (min-width:820px){.hamburger-btn{display:none}}
+.icon-btn svg{width:18px;height:18px}
 .mobile-nav{
   position:fixed;inset:var(--header-h) 0 0 0;z-index:49;background:rgba(250,247,241,.98);backdrop-filter:blur(10px);
   transform:translateY(-8px);opacity:0;pointer-events:none;transition:.22s ease;
@@ -107,6 +107,27 @@ nav.primary{display:none}
 .mobile-nav .wrap{padding-top:18px;padding-bottom:30px;display:flex;flex-direction:column;gap:2px}
 .mobile-nav a{padding:14px 6px;border-bottom:1px solid var(--line-soft);font-weight:700;font-size:1.05rem;text-decoration:none;color:var(--ink);display:flex;align-items:center;justify-content:space-between}
 .mobile-nav a span.ico{opacity:.55;font-size:.9rem}
+
+/* ---------- search ---------- */
+.search-overlay{
+  position:fixed;inset:var(--header-h) 0 0 0;z-index:55;background:rgba(250,247,241,.98);backdrop-filter:blur(10px);
+  transform:translateY(-8px);opacity:0;pointer-events:none;transition:.22s ease;overflow-y:auto;
+}
+.search-overlay.open{transform:translateY(0);opacity:1;pointer-events:auto}
+.search-input-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:13px 14px;margin-top:18px;box-shadow:var(--shadow-sm)}
+.search-input-row svg{flex:0 0 auto;color:var(--ink-3)}
+.search-input-row input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:inherit;font-size:1rem;color:var(--ink)}
+.search-input-row button{flex:0 0 auto;background:none;border:0;color:var(--ink-3);font-size:1.05rem;cursor:pointer;padding:4px;line-height:1}
+.search-results{margin-top:14px;padding-bottom:36px;display:flex;flex-direction:column;gap:7px}
+.search-result{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);cursor:pointer;text-align:right;width:100%;font-family:inherit}
+.search-result:hover{background:var(--surface-2)}
+.search-result .ico{flex:0 0 auto;width:32px;height:32px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.search-result .txt{flex:1;min-width:0}
+.search-result .lbl{font-weight:700;font-size:.92rem;direction:ltr;text-align:right;unicode-bidi:isolate;display:block}
+.search-result .ctx{font-size:.76rem;color:var(--ink-3);margin-top:1px}
+.search-hint,.search-empty{padding:26px 4px;text-align:center;color:var(--ink-3);font-size:.86rem}
+@keyframes searchFlash{0%{box-shadow:0 0 0 4px var(--accent-soft), 0 0 0 1px var(--accent)}100%{box-shadow:0 1px 2px rgba(20,20,25,.05)}}
+.search-flash{animation:searchFlash 1.8s ease}
 
 /* ---------- hero ---------- */
 .hero{
@@ -358,7 +379,8 @@ footer b{color:var(--on-navy)}
   }
   .site-header{background:rgba(15,16,21,.82)}
   .mobile-nav{background:rgba(15,16,21,.98)}
-  .menu-btn{background:var(--surface)}
+  .search-overlay{background:rgba(15,16,21,.98)}
+  .icon-btn{background:var(--surface)}
 }
 </style>
 </head>
@@ -376,11 +398,27 @@ footer b{color:var(--on-navy)}
       <a href="#tips">טיפים</a>
       <a href="#files">קבצים</a>
     </nav>
-    <button class="menu-btn" id="menuBtn" aria-label="תפריט" aria-expanded="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-    </button>
+    <div style="display:flex;gap:8px">
+      <button class="icon-btn" id="searchBtn" aria-label="חיפוש">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="icon-btn hamburger-btn" id="menuBtn" aria-label="תפריט" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+    </div>
   </div>
 </header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="wrap">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="חיפוש — יעדים, אוכל, טיפים, ציוד..." autocomplete="off">
+      <button id="searchClose" aria-label="סגירה">✕</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
 
 <div class="mobile-nav" id="mobileNav">
   <div class="wrap">
@@ -512,27 +550,27 @@ footer b{color:var(--on-navy)}
         <p>שתי רשימות מעשיות — הסימונים נשמרים אוטומטית במכשיר שלכם.</p>
       </div>
 
-      <div class="acc-card reveal" data-open="false">
-        <button class="acc-head">
+      <div class="acc-card reveal" data-open="false" id="pack-hakone">
+        <button class="acc-head" id="packHakoneHead">
           <span class="ico">🎒</span>
           <span class="ti">תיק ללילה בהאקונה<br><span class="sub">רק ל-18 באוקטובר</span></span>
           <span class="progress-pill" id="progHakone">0/13</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="acc-body-outer"><div class="acc-body">
+        <div class="acc-body-outer" id="packHakoneBodyOuter"><div class="acc-body">
           <p>ב-18 באוקטובר שולחים את המזוודות הגדולות (Takkyubin) ישירות מהמלון ביוקוהמה למלון בקיוטו. להאקונה יוצאים עם תיק לילה קטן בלבד.</p>
           <div class="check-list" id="listHakone"></div>
         </div></div>
       </div>
 
-      <div class="acc-card reveal" data-open="false">
-        <button class="acc-head">
+      <div class="acc-card reveal" data-open="false" id="pack-japan">
+        <button class="acc-head" id="packJapanHead">
           <span class="ico">🧳</span>
           <span class="ti">מה לא לשכוח ליפן<br><span class="sub">רשימה כללית לכל הטיול</span></span>
           <span class="progress-pill" id="progJapan">0/15</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="acc-body-outer"><div class="acc-body">
+        <div class="acc-body-outer" id="packJapanBodyOuter"><div class="acc-body">
           <div class="check-list" id="listJapan"></div>
         </div></div>
       </div>
@@ -901,6 +939,7 @@ function searchUrl(q){ return "https://www.google.com/search?q="+encodeURICompon
   var container = document.getElementById("daysContainer");
   DAYS.forEach(function(d){
     var card = el("div","day-card");
+    card.id = "day-"+d.day;
 
     var head = el("button","day-head","");
     head.innerHTML =
@@ -920,8 +959,9 @@ function searchUrl(q){ return "https://www.google.com/search?q="+encodeURICompon
     }
 
     var tl = el("div","timeline");
-    d.items.forEach(function(it){
+    d.items.forEach(function(it, idx){
       var item = el("div","tl-item");
+      item.id = "day-"+d.day+"-item-"+idx;
       var badgesHtml = it.badges.map(function(b){ return '<span class="badge '+LEGEND_CLASS[b]+'">'+LEGEND_LABEL[b]+'</span>'; }).join("");
       var actions = '<div class="tl-actions">';
       actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(it.title)+'">📍 פתיחה במפות</a>';
@@ -979,12 +1019,15 @@ function buildChecklist(containerId, storageKey, items, progressId){
 }
 buildChecklist("listHakone","jp2026_pack_hakone", PACK_HAKONE, "progHakone");
 buildChecklist("listJapan","jp2026_pack_japan", PACK_JAPAN, "progJapan");
+makeExpandable(document.getElementById("pack-hakone"), document.getElementById("packHakoneHead"), document.getElementById("packHakoneBodyOuter"), false);
+makeExpandable(document.getElementById("pack-japan"), document.getElementById("packJapanHead"), document.getElementById("packJapanBodyOuter"), false);
 
 /* ===================== accordion list renderer (tips / food) ===================== */
-function renderAccordionList(containerId, data){
+function renderAccordionList(containerId, data, idPrefix){
   var container = document.getElementById(containerId);
-  data.forEach(function(t){
+  data.forEach(function(t, idx){
     var card = el("div","acc-card");
+    if(idPrefix){ card.id = idPrefix+"-"+idx; }
     var head = el("button","acc-head","");
     head.innerHTML =
       '<span class="ico">'+t.ico+'</span>'+
@@ -1013,8 +1056,8 @@ function renderAccordionList(containerId, data){
     makeExpandable(card, head, bodyOuter, false);
   });
 }
-renderAccordionList("tipsContainer", TIPS);
-renderAccordionList("foodContainer", FOOD);
+renderAccordionList("tipsContainer", TIPS, "tip");
+renderAccordionList("foodContainer", FOOD, "food");
 
 /* ===================== apps + spontaneous ===================== */
 (function(){
@@ -1025,6 +1068,104 @@ renderAccordionList("foodContainer", FOOD);
   var chips = document.getElementById("spontChips");
   SPONT.forEach(function(s){ chips.appendChild(el("span","chip",s)); });
 })();
+
+/* ===================== search ===================== */
+function normalizeSearch(s){ return s.toLowerCase().replace(/[׳'’`]/g, ""); }
+function buildSearchIndex(){
+  var idx = [];
+  DAYS.forEach(function(d){
+    idx.push({icon:"📅", label:d.title, ctx:"יום "+d.day+" · "+d.weekday+" "+d.dateHe, cardId:"day-"+d.day, targetId:"day-"+d.day, text:normalizeSearch(d.title+" "+d.subtitle+" "+d.city)});
+    d.items.forEach(function(it, idx2){
+      idx.push({icon:"📍", label:it.title, ctx:"יום "+d.day+" · "+it.time, cardId:"day-"+d.day, targetId:"day-"+d.day+"-item-"+idx2, text:normalizeSearch(it.title+" "+(it.desc||"")+" "+(it.transport||""))});
+    });
+  });
+  FOOD.forEach(function(cat, ci){
+    idx.push({icon:cat.ico, label:cat.title, ctx:"אוכל, שתייה וקינוחים", cardId:"food-"+ci, targetId:"food-"+ci, text:normalizeSearch(cat.title+" "+(cat.intro||""))});
+    cat.body.forEach(function(li){
+      var name = typeof li === "string" ? li : li.name;
+      var note = typeof li === "string" ? "" : (li.note||"");
+      idx.push({icon:"🍽️", label:name, ctx:cat.title, cardId:"food-"+ci, targetId:"food-"+ci, text:normalizeSearch(name+" "+note)});
+    });
+  });
+  TIPS.forEach(function(cat, ti){
+    idx.push({icon:cat.ico, label:cat.title, ctx:"טיפים חשובים ליפן", cardId:"tip-"+ti, targetId:"tip-"+ti, text:normalizeSearch(cat.title+" "+cat.body.join(" "))});
+  });
+  idx.push({icon:"🎒", label:"תיק ללילה בהאקונה", ctx:"ציוד ואריזה", cardId:"pack-hakone", targetId:"pack-hakone", text:normalizeSearch("תיק לילה האקונה "+PACK_HAKONE.join(" "))});
+  idx.push({icon:"🧳", label:"מה לא לשכוח ליפן", ctx:"ציוד ואריזה", cardId:"pack-japan", targetId:"pack-japan", text:normalizeSearch("ציוד רשימה יפן "+PACK_JAPAN.join(" "))});
+  APPS.forEach(function(a){
+    idx.push({icon:a.ico, label:a.name, ctx:"אפליקציות", cardId:null, targetId:"apps", text:normalizeSearch(a.name)});
+  });
+  idx.push({icon:"💴", label:"כסף והמרת מטבע — JPY ↔ AUD", ctx:"כסף", cardId:null, targetId:"currency", text:"כסף מטבע שער ין דולר aud jpy currency"});
+  idx.push({icon:"📁", label:"קבצים משפחתיים", ctx:"Google Drive", cardId:null, targetId:"files", text:"קבצים משפחתיים דרייב drive files"});
+  idx.push({icon:"🗣️", label:"ביטויים שימושיים ביפנית", ctx:"שפה", cardId:null, targetId:"phrases", text:"שפה ביטויים יפנית sumimasen arigatou"});
+  idx.push({icon:"✨", label:"רגעים של יפן", ctx:"בלי תכנון מראש", cardId:null, targetId:"spontaneous", text:"ספונטני רגעים גשאפון ארקייד וונדינג"});
+  return idx;
+}
+var SEARCH_INDEX = buildSearchIndex();
+
+var searchBtn = document.getElementById("searchBtn");
+var searchOverlay = document.getElementById("searchOverlay");
+var searchInput = document.getElementById("searchInput");
+var searchClose = document.getElementById("searchClose");
+var searchResults = document.getElementById("searchResults");
+var SEARCH_HINT = '<div class="search-hint">הקלידו כדי לחפש בכל האתר — ימים, אטרקציות, אוכל, טיפים וציוד.</div>';
+
+function openSearch(){
+  mobileNav.classList.remove("open");
+  menuBtn.setAttribute("aria-expanded","false");
+  searchOverlay.classList.add("open");
+  if(!searchInput.value) searchResults.innerHTML = SEARCH_HINT;
+  setTimeout(function(){ searchInput.focus(); }, 60);
+}
+function closeSearch(){
+  searchOverlay.classList.remove("open");
+}
+searchBtn.addEventListener("click", openSearch);
+searchClose.addEventListener("click", closeSearch);
+menuBtn.addEventListener("click", closeSearch);
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && searchOverlay.classList.contains("open")) closeSearch();
+});
+
+function runSearch(rawQ){
+  var q = normalizeSearch(rawQ.trim());
+  if(!q){ searchResults.innerHTML = SEARCH_HINT; return; }
+  var matches = SEARCH_INDEX.filter(function(r){ return r.text.indexOf(q) !== -1; }).slice(0, 20);
+  searchResults.innerHTML = "";
+  if(!matches.length){
+    var empty = el("div","search-empty");
+    empty.textContent = 'לא נמצאו תוצאות עבור "'+rawQ.trim()+'".';
+    searchResults.appendChild(empty);
+    return;
+  }
+  matches.forEach(function(r){
+    var btn = document.createElement("button");
+    btn.className = "search-result";
+    btn.innerHTML = '<span class="ico">'+r.icon+'</span><span class="txt"><span class="lbl">'+r.label+'</span><span class="ctx">'+r.ctx+'</span></span>';
+    btn.addEventListener("click", function(){ goToResult(r); });
+    searchResults.appendChild(btn);
+  });
+}
+searchInput.addEventListener("input", function(){ runSearch(searchInput.value); });
+
+function goToResult(r){
+  closeSearch();
+  if(r.cardId){
+    var card = document.getElementById(r.cardId);
+    if(card && card.getAttribute("data-open") !== "true"){
+      var head = card.querySelector(".day-head, .acc-head");
+      if(head) head.click();
+    }
+  }
+  setTimeout(function(){
+    var target = document.getElementById(r.targetId) || (r.cardId && document.getElementById(r.cardId));
+    if(target){
+      target.scrollIntoView({behavior:"smooth", block:"start"});
+      target.classList.add("search-flash");
+      setTimeout(function(){ target.classList.remove("search-flash"); }, 1800);
+    }
+  }, 420);
+}
 
 /* ===================== currency converter ===================== */
 var CURRENCY_CACHE_KEY = "jp2026_fx_cache";
